@@ -18,13 +18,13 @@ module.exports = function (babel) {
       case '**':
         return 'pow';
       // Bitwise shift operators
-      case '<<': // return 'leftShift';
-      case '>>': // return 'signedRightShift';
+      case '<<': // TODO
+      case '>>': // TODO
       // Binary bitwise operators
-      case '&': // return 'bitwiseAnd';
-      case '|': // return 'bitwiseOr';
-      case '^': // return 'bitwiseXor';
-      default: // TODO
+      case '&': // TODO
+      case '|': // TODO
+      case '^': // TODO
+      default:
     }
     return null;
   };
@@ -47,10 +47,7 @@ module.exports = function (babel) {
     return null;
   };
   const getUnaryFunctionName = function (operator) {
-    switch (operator) {
-      case '-': // return 'unaryMinus';
-      case '~': // return 'bitwiseNot';
-    }
+    // TODO
     return null;
   };
   const getUpdateFunctionName = function (operator) {
@@ -228,7 +225,7 @@ module.exports = function (babel) {
     if (path.node.type === 'UpdateExpression') {
       return canBeBigDecimal(path.get('argument'));
     }
-    // TODO: more types
+
     return maybeJSBD;
   };
 
@@ -238,9 +235,6 @@ module.exports = function (babel) {
 
   const maybeJSBDCode = `
 var maybeJSBD = {
-  // toNumber: function toNumber(a) {
-  //   return typeof a === "object" ? JSBD.toNumber(a) : Number(a);
-  // },
   add: function add(a, b) {
     return typeof a === "object" && typeof b === "object" ? JSBD.add(a, b) : a + b;
   },
@@ -259,21 +253,6 @@ var maybeJSBD = {
   pow: function pow(a, b) {
     return typeof a === "object" && typeof b === "object" ? JSBD.pow(a, b) : (typeof a === "bigint" && typeof b === "bigint" ? new Function("a**b", "a", "b")(a, b) : Math.pow(a, b));
   },
-  // leftShift: function leftShift(a, b) {
-  //   return typeof a === "object" && typeof b === "object" ? JSBD.leftShift(a, b) : a << b;
-  // },
-  // signedRightShift: function signedRightShift(a, b) {
-  //   return typeof a === "object" && typeof b === "object" ? JSBD.signedRightShift(a, b) : a >> b;
-  // },
-  // bitwiseAnd: function bitwiseAnd(a, b) {
-  //   return typeof a === "object" && typeof b === "object" ? JSBD.bitwiseAnd(a, b) : a & b;
-  // },
-  // bitwiseOr: function bitwiseOr(a, b) {
-  //   return typeof a === "object" && typeof b === "object" ? JSBD.bitwiseOr(a, b) : a | b;
-  // },
-  // bitwiseXor: function bitwiseXor(a, b) {
-  //   return typeof a === "object" && typeof b === "object" ? JSBD.bitwiseXor(a, b) : a ^ b;
-  // },
   lessThan: function lessThan(a, b) {
     return typeof a === "object" && typeof b === "object" ? JSBD.lessThan(a, b) : a < b;
   },
@@ -292,12 +271,6 @@ var maybeJSBD = {
   notEqual: function notEqual(a, b) {
     return typeof a === "object" && typeof b === "object" ? JSBD.notEqual(a, b) : a !== b;
   },
-  // unaryMinus: function unaryMinus(a) {
-  //   return typeof a === "object" ? JSBD.unaryMinus(a) : -a;
-  // },
-  // bitwiseNot: function bitwiseNot(a) {
-  //   return typeof a === "object" ? JSBD.bitwiseNot(a) : ~a;
-  // }
 };
   `;
 
@@ -305,15 +278,6 @@ var maybeJSBD = {
     inherits: syntaxBigDecimal,
     visitor: {
       CallExpression: function (path) {
-        // if (path.node.callee.name === 'Number') {
-        //   const arg0 = path.get('arguments')[0];
-        //   const JSBD = canBeBigDecimal(arg0);
-        //   if (JSBD !== false) {
-        //     path.replaceWith(
-        //       t.callExpression(t.memberExpression(arg0, t.identifier('toNumber')), [])
-        //     );
-        //   }
-        // }
         if (path.node.callee.name === 'BigDecimal') {
           path.replaceWith(
             t.callExpression(
