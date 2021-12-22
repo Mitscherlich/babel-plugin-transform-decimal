@@ -2,9 +2,6 @@
 
 exports[`it works with UpdateExpression 1`] = `
 "var maybeJSBD = {
-  // toNumber: function toNumber(a) {
-  //   return typeof a === \\"object\\" ? JSBD.toNumber(a) : Number(a);
-  // },
   add: function add(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.add(a, b) : a + b;
   },
@@ -23,21 +20,6 @@ exports[`it works with UpdateExpression 1`] = `
   pow: function pow(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.pow(a, b) : typeof a === \\"bigint\\" && typeof b === \\"bigint\\" ? new Function(\\"a**b\\", \\"a\\", \\"b\\")(a, b) : Math.pow(a, b);
   },
-  // leftShift: function leftShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.leftShift(a, b) : a << b;
-  // },
-  // signedRightShift: function signedRightShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.signedRightShift(a, b) : a >> b;
-  // },
-  // bitwiseAnd: function bitwiseAnd(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseAnd(a, b) : a & b;
-  // },
-  // bitwiseOr: function bitwiseOr(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseOr(a, b) : a | b;
-  // },
-  // bitwiseXor: function bitwiseXor(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseXor(a, b) : a ^ b;
-  // },
   lessThan: function lessThan(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThan(a, b) : a < b;
   },
@@ -55,13 +37,7 @@ exports[`it works with UpdateExpression 1`] = `
   },
   notEqual: function notEqual(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.notEqual(a, b) : a !== b;
-  } // unaryMinus: function unaryMinus(a) {
-  //   return typeof a === \\"object\\" ? JSBD.unaryMinus(a) : -a;
-  // },
-  // bitwiseNot: function bitwiseNot(a) {
-  //   return typeof a === \\"object\\" ? JSBD.bitwiseNot(a) : ~a;
-  // }
-
+  }
 };
 
 var _x, _y, _x2, _y2, _x3, _y3, _x4, _y4, _x5, _y5, _x6, _y6, _x7, _y7, _x8, _y8, _x9, _y9, _z, _x10, _y10, _z2, _x11, _y11, _z3, _x12, _y12, _z4;
@@ -90,9 +66,6 @@ _x12 = o.x, _y12 = y + z, _z4 = _x12[_y12], _x12[_y12] = maybeJSBD.add(_z4, mayb
 
 exports[`non-strict comparisions are not changed 1`] = `
 "var maybeJSBD = {
-  // toNumber: function toNumber(a) {
-  //   return typeof a === \\"object\\" ? JSBD.toNumber(a) : Number(a);
-  // },
   add: function add(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.add(a, b) : a + b;
   },
@@ -111,21 +84,6 @@ exports[`non-strict comparisions are not changed 1`] = `
   pow: function pow(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.pow(a, b) : typeof a === \\"bigint\\" && typeof b === \\"bigint\\" ? new Function(\\"a**b\\", \\"a\\", \\"b\\")(a, b) : Math.pow(a, b);
   },
-  // leftShift: function leftShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.leftShift(a, b) : a << b;
-  // },
-  // signedRightShift: function signedRightShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.signedRightShift(a, b) : a >> b;
-  // },
-  // bitwiseAnd: function bitwiseAnd(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseAnd(a, b) : a & b;
-  // },
-  // bitwiseOr: function bitwiseOr(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseOr(a, b) : a | b;
-  // },
-  // bitwiseXor: function bitwiseXor(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseXor(a, b) : a ^ b;
-  // },
   lessThan: function lessThan(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThan(a, b) : a < b;
   },
@@ -143,13 +101,7 @@ exports[`non-strict comparisions are not changed 1`] = `
   },
   notEqual: function notEqual(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.notEqual(a, b) : a !== b;
-  } // unaryMinus: function unaryMinus(a) {
-  //   return typeof a === \\"object\\" ? JSBD.unaryMinus(a) : -a;
-  // },
-  // bitwiseNot: function bitwiseNot(a) {
-  //   return typeof a === \\"object\\" ? JSBD.bitwiseNot(a) : ~a;
-  // }
-
+  }
 };
 import JSBD from \\"jsbd\\";
 const g = JSBD.BigDecimal(\\".1\\");
@@ -181,9 +133,6 @@ if (g >= 1) {
 
 exports[`works 1`] = `
 "var maybeJSBD = {
-  // toNumber: function toNumber(a) {
-  //   return typeof a === \\"object\\" ? JSBD.toNumber(a) : Number(a);
-  // },
   add: function add(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.add(a, b) : a + b;
   },
@@ -202,21 +151,6 @@ exports[`works 1`] = `
   pow: function pow(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.pow(a, b) : typeof a === \\"bigint\\" && typeof b === \\"bigint\\" ? new Function(\\"a**b\\", \\"a\\", \\"b\\")(a, b) : Math.pow(a, b);
   },
-  // leftShift: function leftShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.leftShift(a, b) : a << b;
-  // },
-  // signedRightShift: function signedRightShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.signedRightShift(a, b) : a >> b;
-  // },
-  // bitwiseAnd: function bitwiseAnd(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseAnd(a, b) : a & b;
-  // },
-  // bitwiseOr: function bitwiseOr(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseOr(a, b) : a | b;
-  // },
-  // bitwiseXor: function bitwiseXor(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseXor(a, b) : a ^ b;
-  // },
   lessThan: function lessThan(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThan(a, b) : a < b;
   },
@@ -234,13 +168,7 @@ exports[`works 1`] = `
   },
   notEqual: function notEqual(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.notEqual(a, b) : a !== b;
-  } // unaryMinus: function unaryMinus(a) {
-  //   return typeof a === \\"object\\" ? JSBD.unaryMinus(a) : -a;
-  // },
-  // bitwiseNot: function bitwiseNot(a) {
-  //   return typeof a === \\"object\\" ? JSBD.bitwiseNot(a) : ~a;
-  // }
-
+  }
 };
 import JSBD from \\"jsbd\\";
 
@@ -252,9 +180,6 @@ function f() {
 
 exports[`works when type of variable is changed 1`] = `
 "var maybeJSBD = {
-  // toNumber: function toNumber(a) {
-  //   return typeof a === \\"object\\" ? JSBD.toNumber(a) : Number(a);
-  // },
   add: function add(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.add(a, b) : a + b;
   },
@@ -273,21 +198,6 @@ exports[`works when type of variable is changed 1`] = `
   pow: function pow(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.pow(a, b) : typeof a === \\"bigint\\" && typeof b === \\"bigint\\" ? new Function(\\"a**b\\", \\"a\\", \\"b\\")(a, b) : Math.pow(a, b);
   },
-  // leftShift: function leftShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.leftShift(a, b) : a << b;
-  // },
-  // signedRightShift: function signedRightShift(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.signedRightShift(a, b) : a >> b;
-  // },
-  // bitwiseAnd: function bitwiseAnd(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseAnd(a, b) : a & b;
-  // },
-  // bitwiseOr: function bitwiseOr(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseOr(a, b) : a | b;
-  // },
-  // bitwiseXor: function bitwiseXor(a, b) {
-  //   return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.bitwiseXor(a, b) : a ^ b;
-  // },
   lessThan: function lessThan(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThan(a, b) : a < b;
   },
@@ -305,13 +215,7 @@ exports[`works when type of variable is changed 1`] = `
   },
   notEqual: function notEqual(a, b) {
     return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.notEqual(a, b) : a !== b;
-  } // unaryMinus: function unaryMinus(a) {
-  //   return typeof a === \\"object\\" ? JSBD.unaryMinus(a) : -a;
-  // },
-  // bitwiseNot: function bitwiseNot(a) {
-  //   return typeof a === \\"object\\" ? JSBD.bitwiseNot(a) : ~a;
-  // }
-
+  }
 };
 import JSBD from \\"jsbd\\";
 let g1 = 1;
