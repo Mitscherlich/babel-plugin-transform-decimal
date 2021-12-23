@@ -28,7 +28,7 @@ a >= b;
 a.toString();
 ```
 
-Compiled output using `JSBD`:
+Compiled output using [`JSBD`][jsbd-repo]:
 
 ```js
 const a = JSBD.BigDecimal(0.1);
@@ -66,3 +66,5 @@ a.toString();
 ## License
 
 Published under [ISC License](LICENSE).
+
+[jsbd-repo]: https://github.com/yukinotech/JSBD
