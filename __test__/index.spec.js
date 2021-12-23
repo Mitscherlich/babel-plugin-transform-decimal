@@ -29,9 +29,8 @@ it('it works with UpdateExpression', function () {
     o.x[y]++;
     o.x[y + z]++;
   `;
-  const { code } = babel.transform(example, {
-    plugins: [plugin],
-  });
+  const { code } = babel.transform(example, { plugins: [plugin] });
+
   expect(code).toMatchSnapshot();
 });
 
@@ -43,9 +42,8 @@ it('works when type of variable is changed', function () {
       console.log(g1);
     }
   `;
-  const { code } = babel.transform(example, {
-    plugins: [plugin],
-  });
+  const { code } = babel.transform(example, { plugins: [plugin] });
+
   expect(code).toMatchSnapshot();
 });
 
@@ -71,10 +69,8 @@ it('non-strict comparisions are not changed', function () {
       console.log(g);
     }
   `;
-  const { code } = babel.transform(example, {
-    plugins: [plugin],
-    parserOpts: { plugins: ['decimal'] },
-  });
+  const { code } = babel.transform(example, { plugins: [plugin] });
+
   expect(code).toMatchSnapshot();
 });
 
@@ -85,9 +81,7 @@ it('works', function () {
       return x + x;
     }
   `;
-  const { code } = babel.transform(example, {
-    plugins: [plugin],
-    parserOpts: { plugins: ['decimal'] },
-  });
+  const { code } = babel.transform(example, { plugins: [plugin] });
+
   expect(code).toMatchSnapshot();
 });
