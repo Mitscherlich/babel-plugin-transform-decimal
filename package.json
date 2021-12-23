@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-bigdecimal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A plugin for babel to transform `x * y` into something like `JSBD.multiply(x, y)` to support bigdecimals.",
   "author": "Mitscherlich <mitscherlich36@gmail.com>",
   "license": "ISC",
