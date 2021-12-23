@@ -1,72 +1,47 @@
-const syntaxBigDecimal = require('@babel/plugin-syntax-decimal').default;
+const syntaxDecimal = require('@babel/plugin-syntax-decimal').default;
+
+// https://github.com/yukinotech/JSBD#usage
+const binaryExpressionToFunction = new Map([
+  ['+', 'add'],
+  ['-', 'subtract'],
+  ['*', 'multiply'],
+  ['/', 'divide'],
+  ['%', 'remainder'],
+  ['**', 'pow'],
+  ['===', 'equal'],
+  ['!==', 'notEqual'],
+  ['<', 'lessThan'],
+  ['>', 'greaterThan'],
+  ['<=', 'lessThanOrEqual'],
+  ['>=', 'greaterThanOrEqual'],
+  ['==', 'equal'],
+  ['!=', 'notEqual'],
+]);
+
+// https://github.com/yukinotech/JSBD#usage
+const unaryExpressionToFunction = new Map([
+  /* TODO */
+]);
+
+// https://github.com/yukinotech/JSBD#usage
+const updateExpressionToFunction = new Map([
+  ['++', 'add'],
+  ['--', 'subtract'],
+]);
+
+// https://github.com/yukinotech/JSBD#usage
+const staticMethods = new Set(['round']);
 
 module.exports = function (babel) {
   const t = babel.types;
-  const getFunctionName = function (operator) {
-    switch (operator) {
-      // Arithmetic operators
-      case '+':
-        return 'add';
-      case '-':
-        return 'subtract';
-      case '*':
-        return 'multiply';
-      case '/':
-        return 'divide';
-      case '%':
-        return 'remainder';
-      case '**':
-        return 'pow';
-      // Bitwise shift operators
-      case '<<': // TODO
-      case '>>': // TODO
-      // Binary bitwise operators
-      case '&': // TODO
-      case '|': // TODO
-      case '^': // TODO
-      default:
-    }
-    return null;
-  };
-  const getRelationalFunctionName = function (operator) {
-    // Relational operators
-    switch (operator) {
-      case '<':
-        return 'lessThan';
-      case '>':
-        return 'greaterThan';
-      case '<=':
-        return 'lessThanOrEqual';
-      case '>=':
-        return 'greaterThanOrEqual';
-      case '===':
-        return 'equal';
-      case '!==':
-        return 'notEqual';
-    }
-    return null;
-  };
-  const getUnaryFunctionName = function (operator) {
-    // TODO
-    return null;
-  };
-  const getUpdateFunctionName = function (operator) {
-    switch (operator) {
-      case '++':
-        return 'add';
-      case '--':
-        return 'subtract';
-    }
-    return null;
-  };
 
   const visited = new Map();
-  const canBeBigDecimal = function (path) {
+  const canBeDecimal = function (path) {
     if (visited.has(path)) {
       return visited.get(path);
     }
     visited.set(path, maybeJSBD);
-    const result = canBeBigDecimalInternal(path);
+    const result = canBeDecimalInternal(path);
     if (result === maybeJSBD) {
       visited.delete(path);
     } else {
@@ -86,7 +61,7 @@ module.exports = function (babel) {
     }
     return false;
   };
-  const canBeBigDecimalInternal = function (path) {
+  const canBeDecimalInternal = function (path) {
     if (path.node.type === 'DecimalLiteral') {
       return JSBD;
     }
@@ -100,20 +75,20 @@ module.exports = function (babel) {
       if (path.node.operator === '+') {
         return false; // +0m is not allowed
       }
-      return canBeBigDecimal(path.get('argument'));
+      return canBeDecimal(path.get('argument'));
     }
     if (path.node.type === 'BinaryExpression') {
-      return and(canBeBigDecimal(path.get('left')), canBeBigDecimal(path.get('right')));
+      return and(canBeDecimal(path.get('left')), canBeDecimal(path.get('right')));
     }
     if (path.node.type === 'AssignmentExpression') {
-      return and(canBeBigDecimal(path.get('left')), canBeBigDecimal(path.get('right')));
+      return and(canBeDecimal(path.get('left')), canBeDecimal(path.get('right')));
     }
     if (path.node.type === 'Identifier') {
       const binding = path.scope.getBinding(path.node.name);
       if (binding != null) {
         if (binding.path.node.type === 'VariableDeclarator') {
           const x = binding.path.get('init');
-          if (x.node != null && canBeBigDecimal(x) === false) {
+          if (x.node != null && canBeDecimal(x) === false) {
             return false;
           }
         }
@@ -121,7 +96,7 @@ module.exports = function (babel) {
           // The next code causes infinite recursion, seems:
           // if (
           //   path.parentPath.node.type === 'BinaryExpression' &&
-          //   getFunctionName(path.parentPath.node.operator) != null &&
+          //   binaryExpressionToFunction.has(path.parentPath.node.operator) &&
           //   canBeBigDecimal(path.parentPath) === false
           // ) {
           //   return false;
@@ -137,7 +112,7 @@ module.exports = function (babel) {
           const tmp = ifStatement.get('test');
           if (tmp.node.operator === '&&') {
             const checkTypeOf = function (node) {
-              if (node.type === 'BinaryExpression' && node.operator === '===') {
+              if (node.type === 'BinaryExpression' && /===?/.test(node.operator)) {
                 if (node.left.type === 'UnaryExpression' && node.left.operator === 'typeof') {
                   if (
                     node.left.argument.type === 'Identifier' &&
@@ -163,8 +138,8 @@ module.exports = function (babel) {
       return maybeJSBD;
     }
     if (path.node.type === 'ConditionalExpression') {
-      return canBeBigDecimal(path.get('consequent')) !== false ||
-        canBeBigDecimal(path.get('alternate')) !== false
+      return canBeDecimal(path.get('consequent')) !== false ||
+        canBeDecimal(path.get('alternate')) !== false
         ? maybeJSBD
         : false;
     }
@@ -213,7 +188,7 @@ module.exports = function (babel) {
             const statements = binding.path.get('body').get('body');
             for (const statement of statements) {
               if (statement.type === 'ReturnStatement') {
-                if (canBeBigDecimal(statement.get('argument')) === false) {
+                if (canBeDecimal(statement.get('argument')) === false) {
                   return false;
                 }
               }
@@ -223,7 +198,7 @@ module.exports = function (babel) {
       }
     }
     if (path.node.type === 'UpdateExpression') {
-      return canBeBigDecimal(path.get('argument'));
+      return canBeDecimal(path.get('argument'));
     }
 
     return maybeJSBD;
@@ -275,7 +250,8 @@ var maybeJSBD = {
   `;
 
   return {
-    inherits: syntaxBigDecimal,
+    name: 'transform-bigdecimal',
+    inherits: syntaxDecimal,
     visitor: {
       CallExpression: function (path) {
         if (path.node.callee.name === 'BigDecimal') {
@@ -285,6 +261,23 @@ var maybeJSBD = {
               path.node.arguments
             )
           );
+          this.shouldInjectHelperCode = true;
+        }
+        if (path.node.callee.type === 'MemberExpression') {
+          if (path.node.callee.object.name === 'BigDecimal') {
+            if (staticMethods.has(path.node.callee.property.name)) {
+              path.replaceWith(
+                t.callExpression(
+                  t.memberExpression(
+                    t.identifier(JSBD),
+                    t.identifier(path.node.callee.property.name)
+                  ),
+                  path.node.arguments
+                )
+              );
+              this.shouldInjectHelperCode = true;
+            }
+          }
         }
       },
       DecimalLiteral: function (path) {
@@ -305,13 +298,14 @@ var maybeJSBD = {
             ])
           );
         }
+        this.shouldInjectHelperCode = true;
       },
       BinaryExpression: function (path) {
-        const JSBD = canBeBigDecimal(path);
+        const JSBD = canBeDecimal(path);
         if (JSBD !== false) {
           const operator = path.node.operator;
-          const functionName = getFunctionName(operator) || getRelationalFunctionName(operator);
-          if (functionName != null) {
+          if (binaryExpressionToFunction.has(operator)) {
+            const functionName = binaryExpressionToFunction.get(operator);
             // x * y -> JSBD.multiply(x, y)
             path.replaceWith(
               t.callExpression(t.memberExpression(t.identifier(JSBD), t.identifier(functionName)), [
@@ -319,30 +313,32 @@ var maybeJSBD = {
                 path.node.right,
               ])
             );
+            this.shouldInjectHelperCode = true;
           }
         }
       },
       UnaryExpression: function (path) {
-        const JSBD = canBeBigDecimal(path);
+        const JSBD = canBeDecimal(path);
         if (JSBD !== false) {
-          const functionName = getUnaryFunctionName(path.node.operator);
-          if (functionName !== null) {
+          if (unaryExpressionToFunction.has(path.node.operator)) {
+            const functionName = unaryExpressionToFunction.get(path.node.operator);
             // -x -> JSBD.unaryMinus(x)
             path.replaceWith(
               t.callExpression(t.memberExpression(t.identifier(JSBD), t.identifier(functionName)), [
                 path.node.argument,
               ])
             );
+            this.shouldInjectHelperCode = true;
           }
         }
       },
       UpdateExpression: function (path) {
-        const JSBD = canBeBigDecimal(path);
+        const JSBD = canBeDecimal(path);
         if (JSBD !== false) {
           const operator = path.node.operator;
           const prefix = path.node.prefix;
-          const functionName = getUpdateFunctionName(operator);
-          if (functionName != null) {
+          if (updateExpressionToFunction.has(operator)) {
+            const functionName = updateExpressionToFunction.get(operator);
             const one = t.callExpression(
               t.memberExpression(t.identifier(JSBD), t.identifier('BigDecimal')),
               [t.numericLiteral(1)]
@@ -406,10 +402,25 @@ var maybeJSBD = {
                   ])
                 );
               }
+            } else if (prefix) {
+              // ++argument -> (argument = argument + 1)
+              path.replaceWith(
+                t.assignmentExpression(
+                  '=',
+                  argument,
+                  t.callExpression(
+                    t.memberExpression(t.identifier(JSBD), t.identifier(functionName)),
+                    [argument, one]
+                  )
+                )
+              );
             } else {
-              if (prefix) {
-                // ++argument -> (argument = argument + 1)
-                path.replaceWith(
+              const x = path.scope.generateUidIdentifier('x');
+              path.scope.push({ id: x });
+              // argument++ -> (x = argument, argument = argument + 1, x)
+              path.replaceWith(
+                t.sequenceExpression([
+                  t.assignmentExpression('=', x, argument),
                   t.assignmentExpression(
                     '=',
                     argument,
@@ -417,37 +428,21 @@ var maybeJSBD = {
                       t.memberExpression(t.identifier(JSBD), t.identifier(functionName)),
                       [argument, one]
                     )
-                  )
-                );
-              } else {
-                const x = path.scope.generateUidIdentifier('x');
-                path.scope.push({ id: x });
-                // argument++ -> (x = argument, argument = argument + 1, x)
-                path.replaceWith(
-                  t.sequenceExpression([
-                    t.assignmentExpression('=', x, argument),
-                    t.assignmentExpression(
-                      '=',
-                      argument,
-                      t.callExpression(
-                        t.memberExpression(t.identifier(JSBD), t.identifier(functionName)),
-                        [argument, one]
-                      )
-                    ),
-                    x,
-                  ])
-                );
-              }
+                  ),
+                  x,
+                ])
+              );
             }
+            this.shouldInjectHelperCode = true;
           }
         }
       },
       AssignmentExpression: function (path) {
-        const D = canBeBigDecimal(path);
+        const D = canBeDecimal(path);
         if (D !== false) {
           const operator = path.node.operator;
           if (operator.endsWith('=')) {
-            const functionName = getFunctionName(operator.slice(0, -'='.length));
+            const functionName = binaryExpressionToFunction.get(operator.slice(0, -'='.length));
             if (functionName != null) {
               const left = path.node.left;
               const right = path.node.right;
@@ -488,23 +483,33 @@ var maybeJSBD = {
                   )
                 );
               }
+              this.shouldInjectHelperCode = true;
             }
           }
         }
       },
-      Program: function (path) {
-        // https://stackoverflow.com/a/35994497
-        const identifier = t.identifier(JSBD);
-        const importDefaultSpecifier = t.importDefaultSpecifier(identifier);
-        const importDeclaration = t.importDeclaration(
-          [importDefaultSpecifier],
-          t.stringLiteral(IMPORT_PATH)
-        );
-        path.unshiftContainer('body', importDeclaration);
+      Program: {
+        exit: function (path) {
+          if (this.shouldInjectHelperCode) {
+            // https://stackoverflow.com/a/35994497
+            const identifier = t.identifier(JSBD);
+            const importDefaultSpecifier = t.importDefaultSpecifier(identifier);
+            const importDeclaration = t.importDeclaration(
+              [importDefaultSpecifier],
+              t.stringLiteral(IMPORT_PATH)
+            );
+            path.unshiftContainer('body', importDeclaration);
+          }
+        },
       },
     },
+    pre: function () {
+      this.shouldInjectHelperCode = false;
+    },
     post: function (state) {
-      state.ast.program.body.unshift(babel.parse(maybeJSBDCode).program.body[0]);
+      if (this.shouldInjectHelperCode) {
+        state.ast.program.body.unshift(babel.parse(maybeJSBDCode).program.body[0]);
+      }
     },
   };
 };
