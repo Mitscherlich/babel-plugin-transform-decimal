@@ -58,6 +58,7 @@ a.toString();
 
 ## TODO(s)
 
+- [x] support `BigDecimal.round(1m)`;
 - [ ] support `Number(0.1m)`;
 - [ ] support shift operators `<<` and `>>`;
 - [ ] support bitwise operators like `&` / `|` / `^`;
