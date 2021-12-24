@@ -1,5 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`BigDecimal.round(m, o) is replaced 1`] = `
+"var maybeJSBD = {
+  add: function add(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.add(a, b) : a + b;
+  },
+  subtract: function subtract(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.subtract(a, b) : a - b;
+  },
+  multiply: function multiply(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.multiply(a, b) : a * b;
+  },
+  divide: function divide(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.divide(a, b) : a / b;
+  },
+  remainder: function remainder(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.remainder(a, b) : a % b;
+  },
+  pow: function pow(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.pow(a, b) : typeof a === \\"bigint\\" && typeof b === \\"bigint\\" ? new Function(\\"a**b\\", \\"a\\", \\"b\\")(a, b) : Math.pow(a, b);
+  },
+  lessThan: function lessThan(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThan(a, b) : a < b;
+  },
+  greaterThan: function greaterThan(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.greaterThan(a, b) : a > b;
+  },
+  lessThanOrEqual: function lessThanOrEqual(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.lessThanOrEqual(a, b) : a <= b;
+  },
+  greaterThanOrEqual: function greaterThanOrEqual(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.greaterThanOrEqual(a, b) : a >= b;
+  },
+  equal: function equal(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.equal(a, b) : a === b;
+  },
+  notEqual: function notEqual(a, b) {
+    return typeof a === \\"object\\" && typeof b === \\"object\\" ? JSBD.notEqual(a, b) : a !== b;
+  }
+};
+import JSBD from \\"jsbd\\";
+const g = JSBD.BigDecimal(1);
+JSBD.round(g, {
+  roundingMode: 'half up'
+});"
+`;
+
 exports[`it works with UpdateExpression 1`] = `
 "var maybeJSBD = {
   add: function add(a, b) {
