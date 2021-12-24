@@ -30,7 +30,6 @@ it('it works with UpdateExpression', function () {
     o.x[y + z]++;
   `;
   const { code } = babel.transform(example, { plugins: [plugin] });
-
   expect(code).toMatchSnapshot();
 });
 
@@ -43,7 +42,6 @@ it('works when type of variable is changed', function () {
     }
   `;
   const { code } = babel.transform(example, { plugins: [plugin] });
-
   expect(code).toMatchSnapshot();
 });
 
@@ -70,7 +68,15 @@ it('non-strict comparisions are not changed', function () {
     }
   `;
   const { code } = babel.transform(example, { plugins: [plugin] });
+  expect(code).toMatchSnapshot();
+});
 
+it('BigDecimal.round(m, o) is replaced', function () {
+  const example = `
+    const g = 1m;
+    BigDecimal.round(10, { roundingMode: 'half up' });
+  `;
+  const { code } = babel.transform(example, { plugins: [plugin] });
   expect(code).toMatchSnapshot();
 });
 
@@ -82,6 +88,5 @@ it('works', function () {
     }
   `;
   const { code } = babel.transform(example, { plugins: [plugin] });
-
   expect(code).toMatchSnapshot();
 });
