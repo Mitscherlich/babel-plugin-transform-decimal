@@ -74,7 +74,7 @@ it('non-strict comparisions are not changed', function () {
 it('BigDecimal.round(m, o) is replaced', function () {
   const example = `
     const g = 1m;
-    BigDecimal.round(10, { roundingMode: 'half up' });
+    BigDecimal.round(g, { roundingMode: 'half up' });
   `;
   const { code } = babel.transform(example, { plugins: [plugin] });
   expect(code).toMatchSnapshot();
