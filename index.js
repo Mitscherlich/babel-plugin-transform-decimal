@@ -203,6 +203,13 @@ module.exports = function (babel) {
 
     return maybeJSBD;
   };
+  const isSafeInteger = function (number) {
+    return (
+      Number.isInteger(number) &&
+      number >= Number.MIN_SAFE_INTEGER &&
+      number <= Number.MAX_SAFE_INTEGER
+    );
+  };
 
   const JSBD = 'JSBD';
   const maybeJSBD = 'maybeJSBD';
@@ -282,17 +289,17 @@ var maybeJSBD = {
       },
       DecimalLiteral: function (path) {
         const value = path.node.value;
-        if (isSafeDecimal(value)) {
-          const number = Number(value); // TODO
-          // 1m -> BigDecimal(1)
+        const number = Number(value);
+        if (isSafeInteger(number)) {
           path.replaceWith(
+            // 1m -> JSBD.BigDecimal(1)
             t.callExpression(t.memberExpression(t.identifier(JSBD), t.identifier('BigDecimal')), [
               t.numericLiteral(number),
             ])
           );
         } else {
-          // 0.99999999999999999m -> BigDecimal('0.99999999999999999')
           path.replaceWith(
+            // .1m -> JSBD.BigDecimal(".1")
             t.callExpression(t.memberExpression(t.identifier(JSBD), t.identifier('BigDecimal')), [
               t.stringLiteral(value),
             ])
@@ -513,7 +520,3 @@ var maybeJSBD = {
     },
   };
 };
-
-function isSafeDecimal(val) {
-  return String(val) === String(Number(val));
-}
