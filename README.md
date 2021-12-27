@@ -1,8 +1,8 @@
-# babel-plugin-transform-bigdecimal
+# babel-plugin-transform-decimal
 
 > NOTICE: This will not work in many cases, so please use bignumber.js or decimal.js directly only if you know, that the code works only with BigDecimals. Since [proposal decimal](https://github.com/tc39/proposal-decimal) is still in stage-1, it might changed a lot and this transformer many take this breaking changes in the feature.
 
-A plugin for babel to transform `x * y` into something like `JSBD.multiply(x, y)` to support bigdecimals.
+A plugin for babel to transform `x * y` into something like `JSBD.multiply(x, y)` to support decimals.
 
 ## Example
 
@@ -52,7 +52,7 @@ a.toString();
 1. Open https://babeljs.io/en/repl
 2. Turn off all presets.
 3. "Add plugin" @babel/babel-plugin-syntax-decimal
-4. "Add plugin" babel-plugin-transform-bigdecimal
+4. "Add plugin" babel-plugin-transform-decimal
 
 > ¡ It is buggy !
 

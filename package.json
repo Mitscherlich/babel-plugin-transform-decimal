@@ -1,18 +1,18 @@
 {
-  "name": "babel-plugin-transform-bigdecimal",
-  "version": "0.0.2",
-  "description": "A plugin for babel to transform `x * y` into something like `JSBD.multiply(x, y)` to support bigdecimals.",
+  "name": "babel-plugin-transform-decimal",
+  "version": "0.1.0",
+  "description": "A plugin for babel to transform `x * y` into something like `JSBD.multiply(x, y)` to support decimals.",
   "author": "Mitscherlich <mitscherlich36@gmail.com>",
   "license": "ISC",
   "keywords": [
     "babel-plugin",
-    "bigdecimal",
+    "decimal",
     "jsbd"
   ],
   "bugs": {
-    "url": "https://github.com/Mitscherlich/babel-plugin-transform-bigdecimal/issues"
+    "url": "https://github.com/Mitscherlich/babel-plugin-transform-decimal/issues"
   },
-  "homepage": "https://github.com/Mitscherlich/babel-plugin-transform-bigdecimal#readme",
+  "homepage": "https://github.com/Mitscherlich/babel-plugin-transform-decimal#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Mitscherlich/babel-plugin-transform-bignumber.git"
