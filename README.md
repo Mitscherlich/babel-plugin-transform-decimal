@@ -56,6 +56,8 @@ a.toString();
 
 > ¡ It is buggy !
 
+Or you can try out on my fork version of [AST explorer](https://mitscherlich.github.io/babel-plugin-transform-decimal/).
+
 ## TODO(s)
 
 - [x] support `BigDecimal.round(1m)`;
